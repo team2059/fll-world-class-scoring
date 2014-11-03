@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="UTF-8">
+        <title>FLL</title>
+        <style>
+            span {
+                display: block;
+            }
+            h1 span {
+                display: inline;
+            }
+        </style>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            var run_data = {"door":0,"cloud":0,"community-learning":0,"robotics-insert":0,"robotics-loop":0,"senses":0,"thinking-outide-the-box":0,"bulb":0,"remote-learning":0,"search-slider":0,"search-loop":0,"sports-ball":0,"sports-net":0,"reverse-basket":0,"reverse-model":0,"changing-conditions":0,"apprenticeship-model":0,"apprenticeship-touching":0,"pb-learning":0,"pb-learning":0,"penalty":0};
+            var run_values = {"door":15,"cloud":30,"community-learning":25,"robotics-insert":25,"robotics-loop":30,"senses":40,"thinking-outide-the-box":25,"bulb":15,"remote-learning":40,"search-slider":15,"search-loop":45,"sports-ball":30,"sports-net":30,"reverse-basket":30,"reverse-model":15,"changing-conditions":15,"apprenticeship-model":20,"apprenticeship-touching":15,"pb-learning":10,"penalty":-10}
+            var socket = io();
+            function findTable(){
+                for (x in document.getElementsByName('table')){
+                    if(document.getElementsByName('table')[x].checked == true){
+                        return document.getElementsByName('table')[x].value;
+                    }
+                }
+            }
+            function newScore() {
+                var score = 0;
+                for (value in run_values){
+                    score += run_data[value] * run_values[value];
+                }
+                /*var put = "team="+document.getElementById("team").value+"&table="+findTable()+"&score="+score;
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.open("POST","/update",true);
+                xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                xmlhttp.send(put);*/
+                var data = {}
+                data["team"] = document.getElementById("team").value;
+                data["table"] = findTable();
+                data["score"] = score;
+                socket.emit('score',JSON.stringify(data));
+                return score;
+            }
+            function update(box){
+                if (box.checked == true){
+                    run_data[box.id]=1;
+                }else{
+                    run_data[box.id]=0;
+                }
+                document.getElementById("score").textContent = newScore();
+            }
+            function requireUpdate(box){
+                if(box.checked == false){
+                    for(var x = 0; x < box.parentNode.getElementsByTagName('input').length; x++){
+                        box.parentNode.getElementsByTagName('input')[x].checked = false;
+                        update(box.parentNode.getElementsByTagName('input')[x]);
+                    };
+                }else{
+                    update(box);
+                }
+            }
+            function supUpdate(box){
+                if(box.checked == true){
+                    if (box.parentNode.getElementsByTagName('input')[0].checked == true){
+                        update(box)
+                    }else{
+                        box.checked = false;
+                    }
+                }else{
+                    update(box);
+                }
+            }
+            function numericUpdate(box){
+                box.name = box.value;
+                if (box.value > 8) {
+                    box.name = 8;
+                    box.value = 8;
+                }
+                if (box.value < 0) {
+                    box.name = 0;
+                    box.value = 0;
+                }
+                if (box.id == "pb-learning" && box.value>0){
+                    box.name = parseInt(box.value) + 1;
+                }
+                run_data[box.id]=box.name;
+                document.getElementById("score").textContent = newScore();
+            }
+            function send() {
+                var sendData = {"missions":{}}
+                sendData["missions"] = run_data;
+                sendData["team"] = document.getElementById("team").value;
+                sendData["table"] = findTable();
+                sendData["raw_score"] = newScore();
+                var put = "data="+JSON.stringify(sendData);
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.open("PUT","/submit");
+                xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                xmlhttp.send(put);
+            }
+        </script>
+    </head>
+    <body>
+        <h1>Current Score: <span id="score">0</span></h1>
+        <span>Team: <input type="text" id="team"></span>
+        <span>Table: <input type="radio" id="table" value="a" name="table">A<input type="radio" id="table" value="b" name="table">B<input type="radio" id="table" value="c" name="table">C<input type="radio" id="table" value="d" name="table">D</span>
+        <span class="fll-mission"><input type="checkbox" id="door" onchange="update(this)">Door opened.</span>
+        <span class="fll-mission"><input type="checkbox" id="cloud" onchange="update(this)">SD card is up.</span>
+        <span class="fll-mission"><input type="checkbox" id="community-learning" onchange="update(this)">Loop no longer touching "Community Learning" model.</span>
+        <span class="fll-mission"><input type="checkbox" id="robotics-insert" onchange="requireUpdate(this)">Only robot insert installed.<input type="checkbox" id="robotics-loop" onchange="supUpdate(this)">Loop no longer touching model.</span>
+        <span class="fll-mission"><input type="checkbox" id="senses" onchange="update(this)">Loop no longer touching "Senses" model.</span>
+        <span class="fll-mission"><input type="checkbox" id="thinking-outide-the-box" onchange="requireUpdate(this)">Idea module no longer touching box module.<input type="checkbox" id="bulb" onchange="supUpdate(this)">Blub facing up.</span>
+        <span class="fll-mission"><input type="checkbox" id="remote-learning" onchange="update(this)">Slider pulled west.</span>
+        <span class="fll-mission"><input type="checkbox" id="search-slider" onchange="requireUpdate(this)">Wheel spun 1+ times by slider.<input type="checkbox" id="search-loop" onchange="supUpdate(this)">Only correct loop removed.</span>
+        <span class="fll-mission"><input type="checkbox" id="sports-ball" onchange="requireUpdate(this)">Ball shot.<input type="checkbox" id="sports-net" onchange="supUpdate(this)">Touching mat in Net at end of match.</span>
+        <span class="fll-mission"><input type="checkbox" id="reverse-basket" onchange="requireUpdate(this)">Basket in base.<input type="checkbox" id="reverse-model" onchange="supUpdate(this)">Identical model in base.</span>
+        <span class="fll-mission"><input type="checkbox" id="changing-conditions" onchange="update(this)">Model rotated 90-ish degrees CCS.</span>
+        <span class="fll-mission"><input type="checkbox" id="apprenticeship-model" onchange="requireUpdate(this)">Apprenticeship model presented to referee.<input type="checkbox" id="apprenticeship-touching" onchange="supUpdate(this)">Touching circle, not in base, people bound.</span>
+        <span class="fll-mission"><input type="number" id="pb-learning" name="0" onchange="numericUpdate(this)">Loops on "Project-based Learning" scale.</span>
+        <span class="fll-mission"><input type="number" id="penalty" name="0" onchange="numericUpdate(this)">Penalties.</span>
+        <input type="submit" onclick="send()">
+    </body>
+</html>
