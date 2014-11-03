@@ -26,12 +26,13 @@ app.get('/standings', function *() {
     yield send(this, __dirname+'/static/standings.html');
 });
 
+app.get('/board', function *() {
+    yield send(this, __dirname+'/static/board.jpg');
+});
+
 app.put('/submit', function *() {
     var body = this.request.body;
-    var data = JSON.parse(body.data);
-    console.log(data);
-    yield runs.insert(data);
-    this.body = true;
+
 });
 
 app.post('/update', function * (){
@@ -70,5 +71,11 @@ io.on('connection',function(socket){
     socket.on('score', function(data) {
         console.log(data);
         socket.broadcast.emit('update',data);
+    });
+    socket.on('submit', function(data) {
+        var data = JSON.parse(data);
+        console.log(data);
+        runs.insert(data);
+        this.body = true; 
     });
 });

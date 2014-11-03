@@ -4,17 +4,99 @@
         <meta charset="UTF-8">
         <title>FLL</title>
         <style>
+            body {
+                background-color: #000;
+            }
+            .heading {
+                color: #FFF;
+            }
+            .fll-mission {
+                background-color: rgba(255,255,255,0.75);
+                position: absolute;
+                max-width: 20%;
+                /*font-size: 0;*/
+            }
+            #board {
+                background: url('/board');
+                background-size: cover;
+                position: relative;
+                width:100%;
+            }
+            input[type="checkbox"] {
+                width: 30px;
+                height: 30px;
+                vertical-align: middle;
+            }
             span {
+                display: inline-block;
+            }
+            .fll-mission input:nth-child(2) {
                 display: block;
+            }
+            .menu-item {
+                min-width: 20%;
+                display: inline-block;
             }
             h1 span {
                 display: inline;
             }
+            #mission-door {
+                top: 50%;
+                left:5%;
+            }
+            #mission-sd {
+                top: 90%;
+                left: 70%;
+            }
+            #mission-community {
+                top: 80%;
+                left: 75%;
+            }
+            #mission-insert {
+                top: 45%;
+                left: 60%;
+            }
+            #mission-senses {
+                top: 25%;
+                left: 70%;
+            }
+            #mission-ideas {
+                top: 65%;
+                right: 10%;
+            }
+            #mission-remote {
+                top: 55%;
+                left: 80%;
+            }
+            #mission-search {
+                top: 10%;
+                left: 35%;
+            }
+            #mission-spertz {
+                top: 40%;
+                left: 38%;
+            }
+            #mission-basket {
+                top: 80%;
+                left: 10%;
+            }
+            #mission-rotate {
+                top: 70%;
+                left: 35%;
+            }
+            #mission-apprenticeship {
+                top: 10%;
+                left: 5%;
+            }
+            #mission-pbl {
+                left: 10%;
+                top: 35%;
+            }
         </style>
         <script src="/socket.io/socket.io.js"></script>
         <script>
-            var run_data = {"door":0,"cloud":0,"community-learning":0,"robotics-insert":0,"robotics-loop":0,"senses":0,"thinking-outide-the-box":0,"bulb":0,"remote-learning":0,"search-slider":0,"search-loop":0,"sports-ball":0,"sports-net":0,"reverse-basket":0,"reverse-model":0,"changing-conditions":0,"apprenticeship-model":0,"apprenticeship-touching":0,"pb-learning":0,"pb-learning":0,"penalty":0};
-            var run_values = {"door":15,"cloud":30,"community-learning":25,"robotics-insert":25,"robotics-loop":30,"senses":40,"thinking-outide-the-box":25,"bulb":15,"remote-learning":40,"search-slider":15,"search-loop":45,"sports-ball":30,"sports-net":30,"reverse-basket":30,"reverse-model":15,"changing-conditions":15,"apprenticeship-model":20,"apprenticeship-touching":15,"pb-learning":10,"penalty":-10}
+            var run_data = {"door":0,"cloud":0,"community-learning":0,"robotics-insert":0,"robotics-loop":0,"senses":0,"thinking-outside-the-box":0,"bulb":0,"remote-learning":0,"search-slider":0,"search-loop":0,"sports-ball":0,"sports-net":0,"reverse-basket":0,"reverse-model":0,"changing-conditions":0,"apprenticeship-model":0,"apprenticeship-touching":0,"pb-learning":0,"pb-learning":0,"penalty":0};
+            var run_values = {"door":15,"cloud":30,"community-learning":25,"robotics-insert":25,"robotics-loop":30,"senses":40,"thinking-outside-the-box":25,"bulb":15,"remote-learning":40,"search-slider":15,"search-loop":45,"sports-ball":30,"sports-net":30,"reverse-basket":30,"reverse-model":15,"changing-conditions":15,"apprenticeship-model":20,"apprenticeship-touching":15,"pb-learning":10,"penalty":-10}
             var socket = io();
             function findTable(){
                 for (x in document.getElementsByName('table')){
@@ -28,11 +110,6 @@
                 for (value in run_values){
                     score += run_data[value] * run_values[value];
                 }
-                /*var put = "team="+document.getElementById("team").value+"&table="+findTable()+"&score="+score;
-                var xmlhttp = new XMLHttpRequest();
-                xmlhttp.open("POST","/update",true);
-                xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-                xmlhttp.send(put);*/
                 var data = {}
                 data["team"] = document.getElementById("team").value;
                 data["table"] = findTable();
@@ -91,32 +168,48 @@
                 sendData["team"] = document.getElementById("team").value;
                 sendData["table"] = findTable();
                 sendData["raw_score"] = newScore();
-                var put = "data="+JSON.stringify(sendData);
-                var xmlhttp = new XMLHttpRequest();
-                xmlhttp.open("PUT","/submit");
-                xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-                xmlhttp.send(put);
+                socket.emit('submit',JSON.stringify(sendData));
             }
         </script>
     </head>
     <body>
-        <h1>Current Score: <span id="score">0</span></h1>
-        <span>Team: <input type="text" id="team"></span>
-        <span>Table: <input type="radio" id="table" value="a" name="table">A<input type="radio" id="table" value="b" name="table">B<input type="radio" id="table" value="c" name="table">C<input type="radio" id="table" value="d" name="table">D</span>
-        <span class="fll-mission"><input type="checkbox" id="door" onchange="update(this)">Door opened.</span>
-        <span class="fll-mission"><input type="checkbox" id="cloud" onchange="update(this)">SD card is up.</span>
-        <span class="fll-mission"><input type="checkbox" id="community-learning" onchange="update(this)">Loop no longer touching "Community Learning" model.</span>
-        <span class="fll-mission"><input type="checkbox" id="robotics-insert" onchange="requireUpdate(this)">Only robot insert installed.<input type="checkbox" id="robotics-loop" onchange="supUpdate(this)">Loop no longer touching model.</span>
-        <span class="fll-mission"><input type="checkbox" id="senses" onchange="update(this)">Loop no longer touching "Senses" model.</span>
-        <span class="fll-mission"><input type="checkbox" id="thinking-outide-the-box" onchange="requireUpdate(this)">Idea module no longer touching box module.<input type="checkbox" id="bulb" onchange="supUpdate(this)">Blub facing up.</span>
-        <span class="fll-mission"><input type="checkbox" id="remote-learning" onchange="update(this)">Slider pulled west.</span>
-        <span class="fll-mission"><input type="checkbox" id="search-slider" onchange="requireUpdate(this)">Wheel spun 1+ times by slider.<input type="checkbox" id="search-loop" onchange="supUpdate(this)">Only correct loop removed.</span>
-        <span class="fll-mission"><input type="checkbox" id="sports-ball" onchange="requireUpdate(this)">Ball shot.<input type="checkbox" id="sports-net" onchange="supUpdate(this)">Touching mat in Net at end of match.</span>
-        <span class="fll-mission"><input type="checkbox" id="reverse-basket" onchange="requireUpdate(this)">Basket in base.<input type="checkbox" id="reverse-model" onchange="supUpdate(this)">Identical model in base.</span>
-        <span class="fll-mission"><input type="checkbox" id="changing-conditions" onchange="update(this)">Model rotated 90-ish degrees CCS.</span>
-        <span class="fll-mission"><input type="checkbox" id="apprenticeship-model" onchange="requireUpdate(this)">Apprenticeship model presented to referee.<input type="checkbox" id="apprenticeship-touching" onchange="supUpdate(this)">Touching circle, not in base, people bound.</span>
-        <span class="fll-mission"><input type="number" id="pb-learning" name="0" onchange="numericUpdate(this)">Loops on "Project-based Learning" scale.</span>
-        <span class="fll-mission"><input type="number" id="penalty" name="0" onchange="numericUpdate(this)">Penalties.</span>
-        <input type="submit" onclick="send()">
+        <div class="heading">
+            <p><div class="menu-item">Current Score: <span id="score">0</span></div>
+            <div class="menu-item"><span>Team: <input type="text" id="team"></span></div>
+            <div class="menu-item"><span>Table: <input type="radio" id="table" value="a" name="table">A<input type="radio" id="table" value="b" name="table">B<input type="radio" id="table" value="c" name="table">C<input type="radio" id="table" value="d" name="table">D</span></div>
+                <div class="menu-item">Penalties.
+                    <span id="mission-touch"><input type="number" id="penalty" name="0" onchange="numericUpdate(this)"></span></div>
+                <input type="submit" onclick="send()">
+                    <button type="reset">Reset</button>
+            </p>
+        </div>
+        <div id="board">
+            <span class="fll-mission" id="mission-door"><input type="checkbox" id="door" onchange="update(this)"><label for="door">Door opened.</label></span>
+            <span class="fll-mission" id="mission-sd"><input type="checkbox" id="cloud" onchange="update(this)">SD card is up.</span>
+            <span class="fll-mission" id="mission-community"><input type="checkbox" id="community-learning" onchange="update(this)">Loop no longer touching "Community Learning" model.</span>
+            <span class="fll-mission" id="mission-insert"><input type="checkbox" id="robotics-insert" onchange="requireUpdate(this)">Only robot insert installed.<input type="checkbox" id="robotics-loop" onchange="supUpdate(this)">Loop no longer touching model.</span>
+            <span class="fll-mission" id="mission-senses"><input type="checkbox" id="senses" onchange="update(this)">Loop no longer touching "Senses" model.</span>
+            <span class="fll-mission" id="mission-ideas" style="text-align:right;"><label for="thinking-outside-the-box" style="float:left;">Idea module no longer touching box module.</label><input type="checkbox" id="thinking-outside-the-box" onchange="requireUpdate(this)"><label for="bulb">Blub facing up.</label><input type="checkbox" id="bulb" onchange="supUpdate(this)"></span>
+            <span class="fll-mission" id="mission-remote"><input type="checkbox" id="remote-learning" onchange="update(this)">Slider pulled west.</span>
+            <span class="fll-mission" id="mission-search"><input type="checkbox" id="search-slider" onchange="requireUpdate(this)">Wheel spun 1+ times by slider.<input type="checkbox" id="search-loop" onchange="supUpdate(this)">Only correct loop removed.</span>
+            <span class="fll-mission" id="mission-spertz"><input type="checkbox" id="sports-ball" onchange="requireUpdate(this)">Ball shot.<input type="checkbox" id="sports-net" onchange="supUpdate(this)">Touching mat in Net at end of match.</span>
+            <span class="fll-mission" id="mission-basket"><input type="checkbox" id="reverse-basket" onchange="requireUpdate(this)">Basket in base.<input type="checkbox" id="reverse-model" onchange="supUpdate(this)">Identical model in base.</span>
+            <span class="fll-mission" id="mission-rotate"><input type="checkbox" id="changing-conditions" onchange="update(this)">Model rotated 90-ish degrees CCS.</span>
+            <span class="fll-mission" id="mission-apprenticeship"><input type="checkbox" id="apprenticeship-model" onchange="requireUpdate(this)">Apprenticeship model presented to referee.<input type="checkbox" id="apprenticeship-touching" onchange="supUpdate(this)">Touching circle, not in base, people bound.</span>
+            <span class="fll-mission" id="mission-pbl"><input type="number" id="pb-learning" name="0" onchange="numericUpdate(this)">Loops on "Project-based Learning" scale.</span>
+        </div>
+        <div id="approve">
+        <input type=text>
+        </div>
+        <script>
+            var board = document.getElementById("board");
+            function resize(){
+                    board.style.height = (board.offsetWidth/1.72)+"px";
+            }
+            window.onresize = function(event) {
+                resize();
+            }
+            resize();
+        </script>
     </body>
 </html>
