@@ -78,12 +78,12 @@
         </table>
     </body>
     <script>updateRankings();
-        var rowNum = 3;
+        var rowNum = 5;
         var currentRows = document.getElementById("rankings").getElementsByTagName('tbody')[1].getElementsByTagName('tr');
         var currentRow = 0 - rowNum;
         function tableScroll(){
             currentRow += rowNum;
-            if (currentRow + rowNum > currentRows.length){
+            if (currentRow > currentRows.length){
                 currentRow = 0;
             }
             for(var x = currentRow; x < currentRow + rowNum; x++){
