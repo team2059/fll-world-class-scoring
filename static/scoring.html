@@ -6,6 +6,7 @@
         <style>
             body {
                 background-color: #000;
+                font-family: sans-serif;
             }
             .heading {
                 color: #FFF;
@@ -14,6 +15,8 @@
                 background-color: rgba(255,255,255,0.75);
                 position: absolute;
                 max-width: 25%;
+                border: 5px solid #FFF;
+                font-weight: bold;
                 /*font-size: 0;*/
             }
             #board {
@@ -27,15 +30,33 @@
                 height: 30px;
                 vertical-align: middle;
             }
+            .fll-mission label:after {
+                content:"\A"; white-space:pre;
+                font-size: 0;
+            }
             span {
                 display: inline-block;
             }
             .fll-mission input:nth-child(2) {
                 display: block;
             }
+
             .menu-item {
                 min-width: 20%;
                 display: inline-block;
+            }
+            .right {
+                max-width: 30%;
+                text-align: right;
+            }
+            .right label:after {
+                content:""; white-space:pre;
+            }
+            .right input:nth-child(2) {
+                display: inline;
+            }
+            .right label:before {
+                content:"\A"; white-space:pre;
             }
             h1 span {
                 display: inline;
@@ -45,8 +66,8 @@
                 left:5%;
             }
             #mission-sd {
-                top: 90%;
-                left: 65%;
+                top: 85%;
+                left: 55%;
             }
             #mission-community {
                 top: 80%;
@@ -61,12 +82,12 @@
                 left: 65%;
             }
             #mission-ideas {
-                top: 65%;
+                top: 60%;
                 right: 10%;
             }
             #mission-remote {
-                top: 55%;
-                left: 80%;
+                top: 50%;
+                left: 75%;
             }
             #mission-search {
                 top: 10%;
@@ -177,39 +198,39 @@
             <p><div class="menu-item">Current Score: <span id="score">0</span></div>
             <div class="menu-item"><span>Team: <input type="text" id="team"></span></div>
             <div class="menu-item"><span>Table: <input type="radio" id="table" value="a" name="table">A<input type="radio" id="table" value="b" name="table">B<input type="radio" id="table" value="c" name="table">C<input type="radio" id="table" value="d" name="table">D</span></div>
-                <div class="menu-item">Penalties.
-                    <span id="mission-touch"><input type="number" id="penalty" name="0" onchange="numericUpdate(this)"></span></div>
-                <input type="submit" onclick="send()">
-                    <button type="reset">Reset</button>
+            <div class="menu-item">Penalties.
+                <span id="mission-touch"><input type="number" id="penalty" name="0" onchange="numericUpdate(this)"></span></div>
+            <input type="submit" onclick="send()">
+            <button type="reset">Reset</button>
             </p>
         </div>
-        <div id="board">
-            <span class="fll-mission" id="mission-door"><input type="checkbox" id="door" onchange="update(this)"><label for="door">Door opened.</label></span>
-            <span class="fll-mission" id="mission-sd"><input type="checkbox" id="cloud" onchange="update(this)">SD card is up.</span>
-            <span class="fll-mission" id="mission-community"><input type="checkbox" id="community-learning" onchange="update(this)">Loop no longer touching "Community Learning" model.</span>
-            <span class="fll-mission" id="mission-insert"><input type="checkbox" id="robotics-insert" onchange="requireUpdate(this)">Only robot insert installed.<input type="checkbox" id="robotics-loop" onchange="supUpdate(this)">Loop no longer touching model.</span>
-            <span class="fll-mission" id="mission-senses"><input type="checkbox" id="senses" onchange="update(this)">Loop no longer touching "Senses" model.</span>
-            <span class="fll-mission" id="mission-ideas" style="text-align:right;"><label for="thinking-outside-the-box" style="float:left;">Idea module no longer touching box module.</label><input type="checkbox" id="thinking-outside-the-box" onchange="requireUpdate(this)"><label for="bulb">Blub facing up.</label><input type="checkbox" id="bulb" onchange="supUpdate(this)"></span>
-            <span class="fll-mission" id="mission-remote"><input type="checkbox" id="remote-learning" onchange="update(this)">Slider pulled west.</span>
-            <span class="fll-mission" id="mission-search"><input type="checkbox" id="search-slider" onchange="requireUpdate(this)">Wheel spun 1+ times by slider.<input type="checkbox" id="search-loop" onchange="supUpdate(this)">Only correct loop removed.</span>
-            <span class="fll-mission" id="mission-spertz"><input type="checkbox" id="sports-ball" onchange="requireUpdate(this)">Ball shot.<input type="checkbox" id="sports-net" onchange="supUpdate(this)">Touching mat in Net at end of match.</span>
-            <span class="fll-mission" id="mission-basket"><input type="checkbox" id="reverse-basket" onchange="requireUpdate(this)">Basket in base.<input type="checkbox" id="reverse-model" onchange="supUpdate(this)">Identical model in base.</span>
-            <span class="fll-mission" id="mission-rotate"><input type="checkbox" id="changing-conditions" onchange="update(this)">Model rotated 90-ish degrees CCS.</span>
-            <span class="fll-mission" id="mission-apprenticeship"><input type="checkbox" id="apprenticeship-model" onchange="requireUpdate(this)">Apprenticeship model presented to referee.<input type="checkbox" id="apprenticeship-touching" onchange="supUpdate(this)">Touching circle, not in base, people bound.</span>
-            <span class="fll-mission" id="mission-pbl"><input type="number" id="pb-learning" name="0" onchange="numericUpdate(this)">Loops on "Project-based Learning" scale.</span>
-        </div>
-        <div id="approve">
+    <div id="board">
+        <span class="fll-mission" id="mission-door"><input type="checkbox" id="door" onchange="update(this)"><label for="door">Door opened.</label></span>
+        <span class="fll-mission right" id="mission-sd"><label for="cloud">SD card is up.</label><input type="checkbox" id="cloud" onchange="update(this)"></span>
+        <span class="fll-mission" id="mission-community"><input type="checkbox" id="community-learning" onchange="update(this)"><label for="community-learning">Loop no longer touching "Community Learning" model.</label></span>
+        <span class="fll-mission" id="mission-insert"><input type="checkbox" id="robotics-insert" onchange="requireUpdate(this)"><label for="robotics-insert">Only robot insert installed.</label><input type="checkbox" id="robotics-loop" onchange="supUpdate(this)"><label for="robotics-loop">Loop no longer touching model.</label></span>
+        <span class="fll-mission" id="mission-senses"><input type="checkbox" id="senses" onchange="update(this)"><label for="senses">Loop no longer touching "Senses" model.</label></span>
+        <span class="fll-mission right" id="mission-ideas"><label for="thinking-outside-the-box">Idea module not touching box.</label><input type="checkbox" id="thinking-outside-the-box" onchange="requireUpdate(this)"><label for="bulb">Blub facing up.</label><input type="checkbox" id="bulb" onchange="supUpdate(this)"></span>
+        <span class="fll-mission" id="mission-remote"><input type="checkbox" id="remote-learning" onchange="update(this)"><label for="remote-learning">Slider pulled west.</label></span>
+        <span class="fll-mission" id="mission-search"><input type="checkbox" id="search-slider" onchange="requireUpdate(this)"><label for="search-slider">Wheel spun 1+ times.</label><input type="checkbox" id="search-loop" onchange="supUpdate(this)"><label for="search-loop">Only correct loop removed.</label></span>
+        <span class="fll-mission" id="mission-spertz"><input type="checkbox" id="sports-ball" onchange="requireUpdate(this)"><label for="sports-ball">Ball shot.</label><input type="checkbox" id="sports-net" onchange="supUpdate(this)"><label for="sports-net">Touching mat in Net at end of match.</label></span>
+        <span class="fll-mission" id="mission-basket"><input type="checkbox" id="reverse-basket" onchange="requireUpdate(this)"><label for="reverse-basket">Basket in base.</label><input type="checkbox" id="reverse-model" onchange="supUpdate(this)"><label for="reverse-model">Identical model in base.</label></span>
+        <span class="fll-mission" id="mission-rotate"><input type="checkbox" id="changing-conditions" onchange="update(this)"><label for="changing-conditions">Model rotated 90-ish degrees CCS.</label></span>
+        <span class="fll-mission" id="mission-apprenticeship"><input type="checkbox" id="apprenticeship-model" onchange="requireUpdate(this)"><label for="apprenticeship-model">Apprenticeship model presented to referee.</label><input type="checkbox" id="apprenticeship-touching" onchange="supUpdate(this)"><label for="apprenticeship-touching">Touching circle, not in base, people bound</label></span>
+        <span class="fll-mission" id="mission-pbl"><input type="number" id="pb-learning" name="0" onchange="numericUpdate(this)"><label for="pb-learning">Loops on "Project-based Learning" scale.</label></span>
+    </div>
+    <div id="approve">
         <input type=text>
-        </div>
-        <script>
-            var board = document.getElementById("board");
-            function resize(){
-                    board.style.height = (board.offsetWidth/1.72)+"px";
-            }
-            window.onresize = function(event) {
-                resize();
-            }
+    </div>
+    <script>
+        var board = document.getElementById("board");
+        function resize(){
+            board.style.height = (board.offsetWidth/1.72)+"px";
+        }
+        window.onresize = function(event) {
             resize();
-        </script>
+        }
+        resize();
+    </script>
     </body>
 </html>

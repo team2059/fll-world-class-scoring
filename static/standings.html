@@ -4,11 +4,20 @@
         <meta charset="UTF-8">
         <title>Current Standings</title>
         <style>
+            table {
+                width: 100%;
+                max-width: 40em;
+                margin: 0 auto 0 auto;
+            }
             td {
                 width: 20%;
+                text-align: center;
             }
             th {
                 width: 20%;
+            }
+            #rankings tbody:nth-of-type(2) tr {
+                display: none;
             }
         </style>
         <script src="/socket.io/socket.io.js"></script>
@@ -21,10 +30,14 @@
             });
             function updateRankings(){
                 var table = document.getElementById("rankings");
-                table.innerHTML='<tr><th colspan="3">Standings</th></tr><tr><th>Rank</th><th>Team</th><th>Score</th></tr>';
                 function updateTable(){
+                    var tableData = table.getElementsByTagName('tbody')[1];
+                    if (tableData){
+                        while (tableData.firstChild) {
+                            tableData.removeChild(tableData.firstChild);
+                        }
+                    }
                     var rankings = JSON.parse(this.responseText);
-                    console.log(rankings);
                     for (var x = 0; x < rankings.length; x++){
                         var newLine = document.createElement('tr');
                         var newTeam = document.createElement('td');
@@ -36,15 +49,18 @@
                         newLine.appendChild(newRank);
                         newLine.appendChild(newTeam);
                         newLine.appendChild(newScore);
-                        table.getElementsByTagName('tbody')[0].appendChild(newLine);
-                        console.log(newLine);
+                        tableData.appendChild(newLine);
                     }
                 }
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.open("get","/rankings",true);
                 xmlhttp.onload = updateTable;
                 xmlhttp.send()
+
             }
+            socket.on('rankings change', function(msg) {
+                updateRankings();
+            })
         </script>
     </head>
     <body>
@@ -55,7 +71,32 @@
             <tr><th>Score</th><td id="score-a">0</td><td id="score-b">0</td><td id="score-c">0</td><td id="score-d">0</td></tr>            
         </table>
         <table id="rankings">         
+            <tbody>
+                <tr><th colspan="3">Standings</th></tr><tr><th>Rank</th><th>Team</th><th>Score</th></tr>
+            </tbody>
+            <tbody></tbody>
         </table>
     </body>
-    <script>updateRankings();</script>
+    <script>updateRankings();
+        var rowNum = 3;
+        var currentRows = document.getElementById("rankings").getElementsByTagName('tbody')[1].getElementsByTagName('tr');
+        var currentRow = 0 - rowNum;
+        function tableScroll(){
+            currentRow += rowNum;
+            if (currentRow + rowNum > currentRows.length){
+                currentRow = 0;
+            }
+            for(var x = currentRow; x < currentRow + rowNum; x++){
+                if(currentRows[x-rowNum]){
+                    currentRows[x-rowNum].style.display = "none";
+                }else{
+                    currentRows[currentRows.length-rowNum+x].style.display = "none";
+                }
+                if(currentRows[x]){
+                    currentRows[x].style.display = "table-row";
+                }
+            }
+        }
+        setInterval(tableScroll,2500);
+    </script>
 </html>
