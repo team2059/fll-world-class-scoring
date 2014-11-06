@@ -30,11 +30,6 @@ app.get('/board', function *() {
     yield send(this, __dirname+'/static/board.jpg');
 });
 
-app.put('/submit', function *() {
-    var body = this.request.body;
-
-});
-
 app.post('/update', function * (){
     var body = this.request.body;
     console.log(body);
