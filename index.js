@@ -60,7 +60,7 @@ app.get('/rankings', function *() {
     this.body = _.map(rankings);
 });
 
-var io = require('socket.io').listen( app.listen(3000) );
+var io = require('socket.io').listen( app.listen((process.env.PORT || 3000) );
 
 io.on('connection',function(socket){
     socket.on('score', function(data) {
