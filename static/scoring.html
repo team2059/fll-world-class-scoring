@@ -262,12 +262,13 @@
         for (var x = 0; x < document.getElementsByTagName('input').length; x++){
             document.getElementsByTagName('input')[x].addEventListener('click', function(event){
                 if (event.target.type == "checkbox") {
-                    if(event.target.className == "button-update"){
-                        update(event.target);
-                    }if (event.target.className == "button-sup"){
-                        supUpdate(event.target);
-                    }if (event.target.className == "button-require"){
-                        requireUpdate(event.target);
+                    switch(event.target.className) {
+                        case "button-update":
+                            update(event.target);
+                        case "button-sup":
+                            supUpdate(event.target);
+                        case "button-require":
+                            requireUpdate(event.target);
                     }
                 }else{
                     if (event.target.className == "input-number"){
