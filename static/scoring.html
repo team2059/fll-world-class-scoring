@@ -31,7 +31,8 @@
                 vertical-align: middle;
             }
             .fll-mission label:after {
-                content:"\A"; white-space:pre;
+                content:"\A";
+                white-space:pre;
                 font-size: 0;
             }
             span {
@@ -50,13 +51,18 @@
                 text-align: right;
             }
             .right label:after {
-                content:""; white-space:pre;
+                content:"";
+                white-space:pre;
             }
             .right input:nth-child(2) {
                 display: inline;
             }
             .right label:before {
                 content:"\A"; white-space:pre;
+            }
+            .numeric-input input {
+                width: 2em;
+                display: inline!important;
             }
             h1 span {
                 display: inline;
@@ -227,9 +233,9 @@
             <div class="menu-item"><span>Team: <input type="text" id="team"></span></div>
             <div class="menu-item"><span>Table: <input type="radio" id="table" value="a" name="table">A<input type="radio" id="table" value="b" name="table">B<input type="radio" id="table" value="c" name="table">C<input type="radio" id="table" value="d" name="table">D</span></div>
             <div class="menu-item">Penalties.
-                <span id="mission-touch"><input type="number" id="penalty" name="0" class="input-number"></span></div>
-            <button type="submit" onclick="send(this)">Ready</button>
-            <button type="reset" onclick="reset()">Reset</button>
+                <span id="mission-touch"><div class="numeric-input"><button type="button" class="subtract">-</button><input type="number" id="penalty" name="0" class="input-number"><button type="button" class="add">+</button></div></span></div>
+            <button type="submit">Ready</button>
+            <button type="reset">Reset</button>
             </p>
         </div>
     <div id="board">
@@ -245,7 +251,7 @@
         <span class="fll-mission" id="mission-basket"><input type="checkbox" id="reverse-basket" class="button-require"><label for="reverse-basket">Basket in base.</label><input type="checkbox" id="reverse-model" class="button-sup"><label for="reverse-model">Identical model in base.</label></span>
         <span class="fll-mission" id="mission-rotate"><input type="checkbox" id="changing-conditions" class="button-update"><label for="changing-conditions">Model rotated 90-ish degrees CCS.</label></span>
         <span class="fll-mission" id="mission-apprenticeship"><input type="checkbox" id="apprenticeship-model" class="button-require"><label for="apprenticeship-model">Apprenticeship model presented to referee.</label><input type="checkbox" id="apprenticeship-touching" class="button-sup"><label for="apprenticeship-touching">Touching circle, not in base, people bound</label></span>
-        <span class="fll-mission" id="mission-pbl"><input type="number" id="pb-learning" name="0" class="input-number"><label for="pb-learning">Loops on "Project-based Learning" scale.</label></span>
+        <span class="fll-mission" id="mission-pbl"><div class="numeric-input"><button type="button" class="subtract">-</button><input type="number" id="pb-learning" name="0" class="input-number"><button type="button" class="add">+</button></div><label for="pb-learning">Loops on "Project-based Learning" scale.</label></span>
     </div>
     <div id="approve">
         <input type=text>
@@ -277,6 +283,27 @@
                 }
             })
         }
+        for (var x = 0; x < document.getElementsByTagName('button').length; x++){
+            document.getElementsByTagName('button')[x].addEventListener('click', function(event){
+                switch(event.target.type){
+                        case "submit":
+                            send(event.target);
+                        case "reset":
+                            reset();
+                        case "button":
+                            switch(event.target.className){
+                                    case "add":
+                                        event.target.parentElement.getElementsByTagName('input')[0].value = parseInt(event.target.parentElement.getElementsByTagName('input')[0].value) + 1;
+                                        numericUpdate(event.target.parentElement.getElementsByTagName('input')[0]);
+                                        return;
+                                    case "subtract":
+                                        event.target.parentElement.getElementsByTagName('input')[0].value = parseInt(event.target.parentElement.getElementsByTagName('input')[0].value) - 1;
+                                        numericUpdate(event.target.parentElement.getElementsByTagName('input')[0]);
+                            }
+                }
+            })
+        }
+        reset();
     </script>
     </body>
 </html>
