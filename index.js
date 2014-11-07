@@ -71,6 +71,7 @@ io.on('connection',function(socket){
         var data = JSON.parse(data);
         console.log(data);
         runs.insert(data);
-        this.body = true; 
+        this.body = true;
+        socket.broadcast.emit('finished',data.table);
     });
 });

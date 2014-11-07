@@ -210,8 +210,13 @@
                         alert("Please input both a team and table");
                         return;
                     }
+                    reset();
                     button.textContent = "Submit";
-                    newScore();
+                    var data = {}
+                    data["team"] = document.getElementById("team").value;
+                    data["table"] = findTable();
+                    data["score"] = 0;
+                    socket.emit('score',JSON.stringify(data));
                 }
             }
         </script>
