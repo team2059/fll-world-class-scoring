@@ -183,13 +183,36 @@
                 run_data[box.id]=box.name;
                 document.getElementById("score").textContent = newScore();
             }
-            function send() {
-                var sendData = {"missions":{}}
-                sendData["missions"] = run_data;
-                sendData["team"] = document.getElementById("team").value;
-                sendData["table"] = findTable();
-                sendData["raw_score"] = newScore();
-                socket.emit('submit',JSON.stringify(sendData));
+            function reset(){
+                for (var x = 0; x < document.getElementsByTagName('input').length; x++) {
+                    if (document.getElementsByTagName('input')[x].type == "checkbox") {
+                        document.getElementsByTagName('input')[x].checked = false;
+                    }
+                    if (document.getElementsByTagName('input')[x].type == "number") {
+                        document.getElementsByTagName('input')[x].value = 0;
+                        document.getElementsByTagName('input')[x].name = 0;
+                    }
+                    document.getElementById("score").textContent = 0;
+                }
+            }
+            function send(button) {
+                if (button.textContent == "Submit"){
+                    var sendData = {"missions":{}}
+                    sendData["missions"] = run_data;
+                    sendData["team"] = document.getElementById("team").value;
+                    sendData["table"] = findTable();
+                    sendData["raw_score"] = newScore();
+                    socket.emit('submit',JSON.stringify(sendData));
+                    reset();
+                    button.textContent = "Ready";
+                } else{
+                    if (findTable()==="undefined" || document.getElementById("team").value==""){
+                        alert("Please input both a team and table");
+                        return;
+                    }
+                    button.textContent = "Submit";
+                    newScore();
+                }
             }
         </script>
     </head>
@@ -200,8 +223,8 @@
             <div class="menu-item"><span>Table: <input type="radio" id="table" value="a" name="table">A<input type="radio" id="table" value="b" name="table">B<input type="radio" id="table" value="c" name="table">C<input type="radio" id="table" value="d" name="table">D</span></div>
             <div class="menu-item">Penalties.
                 <span id="mission-touch"><input type="number" id="penalty" name="0" onchange="numericUpdate(this)"></span></div>
-            <input type="submit" onclick="send()">
-            <button type="reset">Reset</button>
+            <button type="submit" onclick="send(this)">Ready</button>
+            <button type="reset" onclick="reset()">Reset</button>
             </p>
         </div>
     <div id="board">
