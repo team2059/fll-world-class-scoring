@@ -227,25 +227,25 @@
             <div class="menu-item"><span>Team: <input type="text" id="team"></span></div>
             <div class="menu-item"><span>Table: <input type="radio" id="table" value="a" name="table">A<input type="radio" id="table" value="b" name="table">B<input type="radio" id="table" value="c" name="table">C<input type="radio" id="table" value="d" name="table">D</span></div>
             <div class="menu-item">Penalties.
-                <span id="mission-touch"><input type="number" id="penalty" name="0" onchange="numericUpdate(this)"></span></div>
+                <span id="mission-touch"><input type="number" id="penalty" name="0" class="input-number"></span></div>
             <button type="submit" onclick="send(this)">Ready</button>
             <button type="reset" onclick="reset()">Reset</button>
             </p>
         </div>
     <div id="board">
-        <span class="fll-mission" id="mission-door"><input type="checkbox" id="door" onchange="update(this)"><label for="door">Door opened.</label></span>
-        <span class="fll-mission right" id="mission-sd"><label for="cloud">SD card is up.</label><input type="checkbox" id="cloud" onchange="update(this)"></span>
-        <span class="fll-mission" id="mission-community"><input type="checkbox" id="community-learning" onchange="update(this)"><label for="community-learning">Loop no longer touching "Community Learning" model.</label></span>
-        <span class="fll-mission" id="mission-insert"><input type="checkbox" id="robotics-insert" onchange="requireUpdate(this)"><label for="robotics-insert">Only robot insert installed.</label><input type="checkbox" id="robotics-loop" onchange="supUpdate(this)"><label for="robotics-loop">Loop no longer touching model.</label></span>
-        <span class="fll-mission" id="mission-senses"><input type="checkbox" id="senses" onchange="update(this)"><label for="senses">Loop no longer touching "Senses" model.</label></span>
-        <span class="fll-mission right" id="mission-ideas"><label for="thinking-outside-the-box">Idea module not touching box.</label><input type="checkbox" id="thinking-outside-the-box" onchange="requireUpdate(this)"><label for="bulb">Blub facing up.</label><input type="checkbox" id="bulb" onchange="supUpdate(this)"></span>
-        <span class="fll-mission" id="mission-remote"><input type="checkbox" id="remote-learning" onchange="update(this)"><label for="remote-learning">Slider pulled west.</label></span>
-        <span class="fll-mission" id="mission-search"><input type="checkbox" id="search-slider" onchange="requireUpdate(this)"><label for="search-slider">Wheel spun 1+ times.</label><input type="checkbox" id="search-loop" onchange="supUpdate(this)"><label for="search-loop">Only correct loop removed.</label></span>
-        <span class="fll-mission" id="mission-spertz"><input type="checkbox" id="sports-ball" onchange="requireUpdate(this)"><label for="sports-ball">Ball shot.</label><input type="checkbox" id="sports-net" onchange="supUpdate(this)"><label for="sports-net">Touching mat in Net at end of match.</label></span>
-        <span class="fll-mission" id="mission-basket"><input type="checkbox" id="reverse-basket" onchange="requireUpdate(this)"><label for="reverse-basket">Basket in base.</label><input type="checkbox" id="reverse-model" onchange="supUpdate(this)"><label for="reverse-model">Identical model in base.</label></span>
-        <span class="fll-mission" id="mission-rotate"><input type="checkbox" id="changing-conditions" onchange="update(this)"><label for="changing-conditions">Model rotated 90-ish degrees CCS.</label></span>
-        <span class="fll-mission" id="mission-apprenticeship"><input type="checkbox" id="apprenticeship-model" onchange="requireUpdate(this)"><label for="apprenticeship-model">Apprenticeship model presented to referee.</label><input type="checkbox" id="apprenticeship-touching" onchange="supUpdate(this)"><label for="apprenticeship-touching">Touching circle, not in base, people bound</label></span>
-        <span class="fll-mission" id="mission-pbl"><input type="number" id="pb-learning" name="0" onchange="numericUpdate(this)"><label for="pb-learning">Loops on "Project-based Learning" scale.</label></span>
+        <span class="fll-mission" id="mission-door"><input type="checkbox" id="door" class="button-update"><label for="door">Door opened.</label></span>
+        <span class="fll-mission right" id="mission-sd"><label for="cloud">SD card is up.</label><input type="checkbox" id="cloud" class="button-update"></span>
+        <span class="fll-mission" id="mission-community"><input type="checkbox" id="community-learning" class="button-update"><label for="community-learning">Loop no longer touching "Community Learning" model.</label></span>
+        <span class="fll-mission" id="mission-insert"><input type="checkbox" id="robotics-insert" class="button-require"><label for="robotics-insert">Only robot insert installed.</label><input type="checkbox" id="robotics-loop" class="button-sup"><label for="robotics-loop">Loop no longer touching model.</label></span>
+        <span class="fll-mission" id="mission-senses"><input type="checkbox" id="senses" class="button-update"><label for="senses">Loop no longer touching "Senses" model.</label></span>
+        <span class="fll-mission right" id="mission-ideas"><label for="thinking-outside-the-box">Idea module not touching box.</label><input type="checkbox" id="thinking-outside-the-box" class="button-require"><label for="bulb">Blub facing up.</label><input type="checkbox" id="bulb" class="button-sup"></span>
+        <span class="fll-mission" id="mission-remote"><input type="checkbox" id="remote-learning" class="button-update"><label for="remote-learning">Slider pulled west.</label></span>
+        <span class="fll-mission" id="mission-search"><input type="checkbox" id="search-slider" class="button-require"><label for="search-slider">Wheel spun 1+ times.</label><input type="checkbox" id="search-loop" class="button-sup"><label for="search-loop">Only correct loop removed.</label></span>
+        <span class="fll-mission" id="mission-spertz"><input type="checkbox" id="sports-ball" class="button-require"><label for="sports-ball">Ball shot.</label><input type="checkbox" id="sports-net" class="button-sup"><label for="sports-net">Touching mat in Net at end of match.</label></span>
+        <span class="fll-mission" id="mission-basket"><input type="checkbox" id="reverse-basket" class="button-require"><label for="reverse-basket">Basket in base.</label><input type="checkbox" id="reverse-model" class="button-sup"><label for="reverse-model">Identical model in base.</label></span>
+        <span class="fll-mission" id="mission-rotate"><input type="checkbox" id="changing-conditions" class="button-update"><label for="changing-conditions">Model rotated 90-ish degrees CCS.</label></span>
+        <span class="fll-mission" id="mission-apprenticeship"><input type="checkbox" id="apprenticeship-model" class="button-require"><label for="apprenticeship-model">Apprenticeship model presented to referee.</label><input type="checkbox" id="apprenticeship-touching" class="button-sup"><label for="apprenticeship-touching">Touching circle, not in base, people bound</label></span>
+        <span class="fll-mission" id="mission-pbl"><input type="number" id="pb-learning" name="0" class="input-number"><label for="pb-learning">Loops on "Project-based Learning" scale.</label></span>
     </div>
     <div id="approve">
         <input type=text>
@@ -259,6 +259,23 @@
             resize();
         }
         resize();
+        for (var x = 0; x < document.getElementsByTagName('input').length; x++){
+            document.getElementsByTagName('input')[x].addEventListener('click', function(event){
+                if (event.target.type == "checkbox") {
+                    if(event.target.className == "button-update"){
+                        update(event.target);
+                    }if (event.target.className == "button-sup"){
+                        supUpdate(event.target);
+                    }if (event.target.className == "button-require"){
+                        requireUpdate(event.target);
+                    }
+                }else{
+                    if (event.target.className == "input-number"){
+                        numericUpdate(event.target);
+                    }
+                }
+            })
+        }
     </script>
     </body>
 </html>
