@@ -119,11 +119,17 @@
                 left: 5%;
                 top: 35%;
             }
+            #mission-engagement {
+                left:5%;
+                top: 90%;
+            }
         </style>
         <script src="/socket.io/socket.io.js"></script>
         <script>
             var run_data = {"door":0,"cloud":0,"community-learning":0,"robotics-insert":0,"robotics-loop":0,"senses":0,"thinking-outside-the-box":0,"bulb":0,"remote-learning":0,"search-slider":0,"search-loop":0,"sports-ball":0,"sports-net":0,"reverse-basket":0,"reverse-model":0,"changing-conditions":0,"apprenticeship-model":0,"apprenticeship-touching":0,"pb-learning":0,"pb-learning":0,"penalty":0};
             var run_values = {"door":15,"cloud":30,"community-learning":25,"robotics-insert":25,"robotics-loop":30,"senses":40,"thinking-outside-the-box":25,"bulb":15,"remote-learning":40,"search-slider":15,"search-loop":45,"sports-ball":30,"sports-net":30,"reverse-basket":30,"reverse-model":15,"changing-conditions":15,"apprenticeship-model":20,"apprenticeship-touching":15,"pb-learning":10,"penalty":-10}
+            var has_engagement = 0;
+            var amount_engagement = 0;
             var socket = io();
             function findTable(){
                 for (x in document.getElementsByName('table')){
@@ -136,6 +142,10 @@
                 var score = 0;
                 for (value in run_values){
                     score += run_data[value] * run_values[value];
+                }
+                if (has_engagement > 0){
+                    score += has_engagement;
+                    score = score * (100 + amount_engagement)/100;
                 }
                 var data = {}
                 data["team"] = document.getElementById("team").value;
@@ -172,6 +182,37 @@
                 }else{
                     update(box);
                 }
+                document.getElementById("score").textContent = newScore();
+            }
+            function engagementUpdate(box){
+                if(box.checked == true){
+                    has_engagement = 20;
+                }else{
+                    has_engagement = 0;
+                }
+            }
+            function engagementCheck(box) {
+                if(box.checked == true) {
+                    has_engagement = 20;
+                }else{
+                    has_engagement = 0;
+                }
+                document.getElementById("score").textContent = newScore();
+            }
+            function changeEngagement(box) {
+                if (box.value > 49) {
+                    box.value = 49;
+                    box.name = 49;
+                }
+                if (box.value < 0) {
+                    box.value = 0;
+                    box.name = 0;
+                }
+                if (box.value > 0) {
+                    box.name = parseInt(box.value) + 9;
+                }
+                amount_engagement = parseInt(box.name);
+                document.getElementById("score").textContent = newScore();
             }
             function numericUpdate(box){
                 box.name = box.value;
@@ -252,6 +293,7 @@
         <span class="fll-mission" id="mission-rotate"><input type="checkbox" id="changing-conditions" class="button-update"><label for="changing-conditions">Model rotated 90-ish degrees CCS.</label></span>
         <span class="fll-mission" id="mission-apprenticeship"><input type="checkbox" id="apprenticeship-model" class="button-require"><label for="apprenticeship-model">Apprenticeship model presented to referee.</label><input type="checkbox" id="apprenticeship-touching" class="button-sup"><label for="apprenticeship-touching">Touching circle, not in base, people bound</label></span>
         <span class="fll-mission" id="mission-pbl"><div class="numeric-input"><button type="button" class="subtract">-</button><input type="number" id="pb-learning" name="0" class="input-number"><button type="button" class="add">+</button></div><label for="pb-learning">Loops on "Project-based Learning" scale.</label></span>
+        <span class="fll-mission" id="mission-engagement"><input type="checkbox" id="has_engagement" class="button-engagement"><label for="has_engagement">Engagement engaged.</label><div class="numeric-input" id="engagement"><button type="button" class="subtract">-</button><input type="number" id="engagement_amount" name="0" class="input-number"><button type="button" class="add">+</button></div></span>
     </div>
     <div id="approve">
         <input type=text>
@@ -266,7 +308,7 @@
         }
         resize();
         for (var x = 0; x < document.getElementsByTagName('input').length; x++){
-            document.getElementsByTagName('input')[x].addEventListener('click', function(event){
+            document.getElementsByTagName('input')[x].addEventListener('change', function(event){
                 if (event.target.type == "checkbox") {
                     switch(event.target.className) {
                         case "button-update":
@@ -275,6 +317,8 @@
                             supUpdate(event.target);
                         case "button-require":
                             requireUpdate(event.target);
+                        case "button-engagement":
+                            engagementCheck(event.target);
                     }
                 }else{
                     if (event.target.className == "input-number"){
@@ -285,21 +329,28 @@
         }
         for (var x = 0; x < document.getElementsByTagName('button').length; x++){
             document.getElementsByTagName('button')[x].addEventListener('click', function(event){
+                function sendUpdate(){
+                    if (event.target.parentElement.getElementsByTagName('input')[0].id == "engagement_amount") {
+                        changeEngagement(event.target.parentElement.getElementsByTagName('input')[0]);
+                    }else{
+                        numericUpdate(event.target.parentElement.getElementsByTagName('input')[0]);
+                    }
+                }
                 switch(event.target.type){
-                        case "submit":
-                            send(event.target);
-                        case "reset":
-                            reset();
-                        case "button":
-                            switch(event.target.className){
-                                    case "add":
-                                        event.target.parentElement.getElementsByTagName('input')[0].value = parseInt(event.target.parentElement.getElementsByTagName('input')[0].value) + 1;
-                                        numericUpdate(event.target.parentElement.getElementsByTagName('input')[0]);
-                                        return;
-                                    case "subtract":
-                                        event.target.parentElement.getElementsByTagName('input')[0].value = parseInt(event.target.parentElement.getElementsByTagName('input')[0].value) - 1;
-                                        numericUpdate(event.target.parentElement.getElementsByTagName('input')[0]);
-                            }
+                    case "submit":
+                        send(event.target);
+                    case "reset":
+                        reset();
+                    case "button":
+                        switch(event.target.className){
+                            case "add":
+                                event.target.parentElement.getElementsByTagName('input')[0].value = parseInt(event.target.parentElement.getElementsByTagName('input')[0].value) + 1;
+                                sendUpdate();
+                                return; // prevents this from being sent twice
+                            case "subtract":
+                                event.target.parentElement.getElementsByTagName('input')[0].value = parseInt(event.target.parentElement.getElementsByTagName('input')[0].value) - 1;
+                                sendUpdate();
+                        }
                 }
             })
         }
