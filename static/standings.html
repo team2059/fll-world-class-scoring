@@ -30,11 +30,6 @@
                 document.getElementById('score-'+data.table).style.backgroundColor = "#FFF";
                 document.getElementById('team-'+data.table).style.backgroundColor = "#FFF";
             });
-            socket.on('finished', function(msg) {
-                console.log(msg);
-                document.getElementById('score-'+msg).style.backgroundColor = "green";
-                document.getElementById('team-'+msg).style.backgroundColor = "green";
-            });
             function updateRankings(){
                 var table = document.getElementById("rankings");
                 function updateTable(){
@@ -65,7 +60,9 @@
                 xmlhttp.send()
 
             }
-            socket.on('rankings change', function(msg) {
+            socket.on('finished', function(msg) {
+                document.getElementById('score-'+msg).style.backgroundColor = "green";
+                document.getElementById('team-'+msg).style.backgroundColor = "green";
                 updateRankings();
             })
         </script>
