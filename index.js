@@ -60,16 +60,26 @@ app.get('/rankings', function *() {
     this.body = _.map(rankings);
 });
 
+app.get('/runs', function *() {
+    var run_id = this.params.id;
+    var res = yield runs.find({});
+    this.body = _.map(res);
+})
+
+app.get('/run/:id', function *() {
+    var run_id = this.params.id;
+    var res = yield runs.find({"_id":run_id});
+    this.body = _.map(res);
+})
+
 var io = require('socket.io').listen( app.listen(process.env.PORT || 3000) );
 
 io.on('connection',function(socket){
     socket.on('score', function(data) {
-        console.log(data);
         socket.broadcast.emit('update',data);
     });
     socket.on('submit', function(data) {
         var data = JSON.parse(data);
-        console.log(data);
         runs.insert(data);
         this.body = true;
         socket.broadcast.emit('finished',data.table);
