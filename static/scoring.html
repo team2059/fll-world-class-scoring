@@ -123,6 +123,18 @@
                 left:5%;
                 top: 90%;
             }
+            #approve {
+                position: fixed;
+                top: 10%;
+                left: 10%;
+                width: 20%;
+                padding: 20% 30% 20% 30%;
+                margin: 0 auto 0 auto;
+                text-align: center;
+                background-color: rgba(0,0,0,0.75);
+                color: #FFF;
+                display: none;
+            }
         </style>
         <script src="/socket.io/socket.io.js"></script>
         <script>
@@ -244,6 +256,11 @@
             }
             function send(button) {
                 if (button.textContent == "Submit"){
+                    if (document.getElementById('approve').getElementsByTagName('input')[0].value == "") {
+                        alert("Please provide a signature");
+                        return;
+                    }
+                    document.getElementById('approve').style.display = "none";
                     var sendData = {"missions":{}}
                     sendData["missions"] = run_data;
                     sendData["team"] = document.getElementById("team").value;
@@ -254,18 +271,21 @@
                     socket.emit('submit',JSON.stringify(sendData));
                     reset();
                     button.textContent = "Ready";
-                } else{
+                } else if (button.textContent == "Ready"){
                     if (findTable()==="undefined" || document.getElementById("team").value==""){
                         alert("Please input both a team and table");
                         return;
                     }
                     reset();
-                    button.textContent = "Submit";
+                    button.textContent = "Finished";
                     var data = {}
                     data["team"] = document.getElementById("team").value;
                     data["table"] = findTable();
                     data["score"] = 0;
                     socket.emit('score',JSON.stringify(data));
+                } else if (button.textContent == "Finished") {
+                    document.getElementById('approve').style.display = "block";
+                    button.textContent = "Submit";
                 }
             }
         </script>
@@ -298,6 +318,7 @@
         <span class="fll-mission" id="mission-engagement"><input type="checkbox" id="has_engagement" class="button-engagement"><label for="has_engagement">Engagement engaged.</label><div class="numeric-input" id="engagement"><button type="button" class="subtract">-</button><input type="number" id="engagement_amount" name="0" class="input-number"><button type="button" class="add">+</button></div></span>
     </div>
     <div id="approve">
+        <h3>Sign here:</h3>
         <input type=text>
     </div>
     <script>
