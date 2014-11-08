@@ -61,6 +61,7 @@ app.get('/rankings', function *() {
 });
 
 app.get('/runs', function *() {
+    runDB.persistence.compactDatafile;
     var run_id = this.params.id;
     var res = yield runs.find({});
     this.body = _.map(res);
@@ -70,6 +71,10 @@ app.get('/run/:id', function *() {
     var run_id = this.params.id;
     var res = yield runs.find({"_id":run_id});
     this.body = _.map(res);
+})
+
+app.get('/edit/:id', function *() {
+    yield send(this, __dirname+'/static/update.html');
 })
 
 var io = require('socket.io').listen( app.listen(process.env.PORT || 3000) );
@@ -83,5 +88,15 @@ io.on('connection',function(socket){
         runs.insert(data);
         this.body = true;
         socket.broadcast.emit('finished',data.table);
+    });
+    socket.on('update', function(data) {
+        var data = JSON.parse(data);
+        runs.update({"_id":data["id"]},{$set:data["message"]},{upsert: true}, function (err, numReplaced){
+            console.log(err);
+            console.log(numReplaced);
+        });
+        runDB = new Datastore({ filename: "db/runs.db", autoload: true }); // persistence.compactDatafile is having issues, so the database is reloaded here. 
+        runs = wrap(runDB);
+        this.body = true;
     });
 });
