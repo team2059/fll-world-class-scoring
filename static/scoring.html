@@ -248,7 +248,9 @@
                     sendData["missions"] = run_data;
                     sendData["team"] = document.getElementById("team").value;
                     sendData["table"] = findTable();
-                    sendData["raw_score"] = newScore();
+                    sendData["has_engagement"] = has_engagement;
+                    sendData["engagement"] = amount_engagement;
+                    sendData["score"] = newScore();
                     socket.emit('submit',JSON.stringify(sendData));
                     reset();
                     button.textContent = "Ready";
