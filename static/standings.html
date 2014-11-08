@@ -84,7 +84,7 @@
         </table>
     </body>
     <script>updateRankings();
-        var rowNum = 5;
+        var rowNum = 12;
         var currentRows = document.getElementById("rankings").getElementsByTagName('tbody')[1].getElementsByTagName('tr');
         var currentRow = 0 - rowNum;
         function tableScroll(){
@@ -106,6 +106,6 @@
                 }
             }
         }
-        setInterval(tableScroll,2500);
+        setInterval(tableScroll,5000);
     </script>
 </html>

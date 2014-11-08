@@ -1,3 +1,4 @@
+//["3814","6915","15001A","15001B","15001C","15001D","15001E","15001F","8357","5027","ecms01","ecms02","ecms03","ecmd04","5089","7263","825","GG","4899","NB","1497","54","CMM","60"]
 var router = require('koa-router');
 var cors = require('koa-cors');
 var Datastore = require('nedb');
@@ -6,6 +7,7 @@ var bodyParser = require('koa-bodyparser');
 var json = require('koa-json');
 var _ = require('lodash');
 var send = require('koa-send');
+
 
 var app = require( 'koa' )();
 app.use(bodyParser());
@@ -75,6 +77,10 @@ app.get('/run/:id', function *() {
 
 app.get('/edit/:id', function *() {
     yield send(this, __dirname+'/static/update.html');
+})
+
+app.get('/teams', function *(){
+    yield send(this, __dirname+'/db/teams.json');
 })
 
 var io = require('socket.io').listen( app.listen(process.env.PORT || 3000) );

@@ -271,7 +271,6 @@
                     socket.emit('submit',JSON.stringify(sendData));
                     //reset();
                     button.textContent = "Ready";
-                    document.getElementById("team").value = "";
                     document.getElementById('approve').getElementsByTagName('input')[0].value = "";
                 } else if (button.textContent == "Ready"){
                     if (findTable()===undefined || document.getElementById("team").value==""){
@@ -286,8 +285,8 @@
                     reset();
                     socket.emit('score',JSON.stringify(data));
                 } else if (button.textContent == "Finished") {
-                    document.getElementById('approve').style.display = "block";
-                    button.textContent = "Submit";
+                    //document.getElementById('approve').style.display = "block";
+                    button.textContent = "Ready"; //Change back to submit. 
                 }
             }
         </script>
@@ -295,7 +294,7 @@
     <body>
         <div class="heading">
             <p><div class="menu-item">Current Score: <span id="score">0</span></div>
-            <div class="menu-item"><span>Team: <input type="text" id="team"></span></div>
+            <div class="menu-item"><span>Team: <!--<input type="text" id="team">--><select name="select" id="team"></select></span></div>
             <div class="menu-item"><span>Table: <input type="radio" id="table" value="a" name="table">A<input type="radio" id="table" value="b" name="table">B<input type="radio" id="table" value="c" name="table">C<input type="radio" id="table" value="d" name="table">D<input type="radio" id="table" value="e" name="table">E<input type="radio" id="table" value="f" name="table">F</span></div>
             <div class="menu-item">Penalties.
                 <span id="mission-touch"><div class="numeric-input"><button type="button" class="subtract">-</button><input type="number" id="penalty" name="0" class="input-number"><button type="button" class="add">+</button></div></span></div>
@@ -387,6 +386,21 @@
                 }
             })
         }
+        function getTeams(){
+            var teamsList = document.getElementById('team');
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET","/teams",false);
+            xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            xmlhttp.send();
+            var data = JSON.parse(xmlhttp.responseText);
+            for (var x = 0; x < data.length; x++){
+                var newOption = document.createElement('option');
+                newOption.value = data[x];
+                newOption.textContent = data[x];
+                teamsList.appendChild(newOption);
+            }
+        }
+        getTeams();
         reset();
     </script>
     </body>
