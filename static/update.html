@@ -286,7 +286,7 @@
         <div class="heading">
             <p><div class="menu-item">Current Score: <span id="score">0</span></div>
             <div class="menu-item"><span>Team: <input type="text" id="team"></span></div>
-            <div class="menu-item"><span>Table: <input type="radio" id="table" value="a" name="table">A<input type="radio" id="table" value="b" name="table">B<input type="radio" id="table" value="c" name="table">C<input type="radio" id="table" value="d" name="table">D</span></div>
+            <div class="menu-item"><span>Table: <input type="radio" id="table" value="a" name="table">A<input type="radio" id="table" value="b" name="table">B<input type="radio" id="table" value="c" name="table">C<input type="radio" id="table" value="d" name="table">D<input type="radio" id="table" value="e" name="table">E<input type="radio" id="table" value="f" name="table">F</span></div>
             <div class="menu-item">Penalties.
                 <span id="mission-touch"><div class="numeric-input"><button type="button" class="subtract">-</button><input type="number" id="penalty" name="0" class="input-number"><button type="button" class="add">+</button></div></span></div>
             <button type="submit">Finished</button>
@@ -361,14 +361,18 @@
                     switch(event.target.className) {
                         case "button-update":
                             update(event.target);
+                            break;
                         case "button-sup":
                             supUpdate(event.target);
+                            break;
                         case "button-require":
                             requireUpdate(event.target);
+                            break;
                         case "button-engagement":
                             engagementCheck(event.target);
+                            break;
                     }
-                }else{
+                }ese{
                     if (event.target.className == "input-number"){
                         numericUpdate(event.target);
                     }

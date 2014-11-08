@@ -38,9 +38,9 @@ app.post('/update', function * (){
 
 app.get('/rankings', function *() {
     function compare(a,b) {
-        if (a["raw_score"] < b["raw_score"])
+        if (a["score"] < b["score"])
             return 1;
-        if (a["raw_score"] > b["raw_score"])
+        if (a["score"] > b["score"])
             return -1;
         return 0;
     }
@@ -52,7 +52,7 @@ app.get('/rankings', function *() {
         if(doneTeams.indexOf(res[x]["team"]) < 0){
             var newData = {}
             newData["team"]=res[x]["team"];
-            newData["score"]=res[x]["raw_score"];
+            newData["score"]=res[x]["score"];
             rankings.push(newData);
             doneTeams.push(res[x]["team"]);
         }

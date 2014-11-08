@@ -10,7 +10,7 @@
                 margin: 0 auto 0 auto;
             }
             td {
-                width: 20%;
+                width: 14.2%;
                 text-align: center;
             }
             th {
@@ -38,20 +38,21 @@
                         while (tableData.firstChild) {
                             tableData.removeChild(tableData.firstChild);
                         }
-                    }
-                    var rankings = JSON.parse(this.responseText);
-                    for (var x = 0; x < rankings.length; x++){
-                        var newLine = document.createElement('tr');
-                        var newTeam = document.createElement('td');
-                        newTeam.textContent = rankings[x]["team"];
-                        var newRank = document.createElement('td');
-                        newRank.textContent = x+1;
-                        var newScore = document.createElement('td');
-                        newScore.textContent = rankings[x]["score"];
-                        newLine.appendChild(newRank);
-                        newLine.appendChild(newTeam);
-                        newLine.appendChild(newScore);
-                        tableData.appendChild(newLine);
+                        var rankings = JSON.parse(this.responseText);
+                        console.log(this.response);
+                        for (var x = 0; x < rankings.length; x++){
+                            var newLine = document.createElement('tr');
+                            var newTeam = document.createElement('td');
+                            newTeam.textContent = rankings[x]["team"];
+                            var newRank = document.createElement('td');
+                            newRank.textContent = x+1;
+                            var newScore = document.createElement('td');
+                            newScore.textContent = rankings[x]["score"];
+                            newLine.appendChild(newRank);
+                            newLine.appendChild(newTeam);
+                            newLine.appendChild(newScore);
+                            tableData.appendChild(newLine);
+                        }
                     }
                 }
                 var xmlhttp = new XMLHttpRequest();
@@ -61,6 +62,7 @@
 
             }
             socket.on('finished', function(msg) {
+                console.log(msg);
                 document.getElementById('score-'+msg).style.backgroundColor = "green";
                 document.getElementById('team-'+msg).style.backgroundColor = "green";
                 updateRankings();
@@ -69,10 +71,10 @@
     </head>
     <body>
         <table id="current">
-            <tr><th colspan="5">Current Runs</th></tr>
-            <tr><th>Table</th><td>A</td><td>B</td><td>C</td><td>D</td></tr>
-            <tr><th>Team</th><td id="team-a">0</td><td id="team-b">0</td><td id="team-c">0</td><td id="team-d">0</td></tr>
-            <tr><th>Score</th><td id="score-a">0</td><td id="score-b">0</td><td id="score-c">0</td><td id="score-d">0</td></tr>            
+            <tr><th colspan="7">Current Runs</th></tr>
+            <tr><th>Table</th><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td></tr>
+            <tr><th>Team</th><td id="team-a">0</td><td id="team-b">0</td><td id="team-c">0</td><td id="team-d">0</td><td id="team-e">0</td><td id="team-f">0</td></tr>
+            <tr><th>Score</th><td id="score-a">0</td><td id="score-b">0</td><td id="score-c">0</td><td id="score-d">0</td><td id="score-e">0</td><td id="score-f">0</td></tr>            
         </table>
         <table id="rankings">         
             <tbody>
@@ -86,6 +88,9 @@
         var currentRows = document.getElementById("rankings").getElementsByTagName('tbody')[1].getElementsByTagName('tr');
         var currentRow = 0 - rowNum;
         function tableScroll(){
+            if (currentRows.length < 5) {
+                return;
+            }
             currentRow += rowNum;
             if (currentRow > currentRows.length){
                 currentRow = 0;

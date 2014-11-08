@@ -196,13 +196,6 @@
                 }
                 document.getElementById("score").textContent = newScore();
             }
-            function engagementUpdate(box){
-                if(box.checked == true){
-                    has_engagement = 20;
-                }else{
-                    has_engagement = 0;
-                }
-            }
             function engagementCheck(box) {
                 if(box.checked == true) {
                     has_engagement = 20;
@@ -274,11 +267,12 @@
                     sendData["engagement"] = amount_engagement;
                     sendData["score"] = newScore();
                     sendData["sign"] = document.getElementById('approve').getElementsByTagName('input')[0].value;
-                    console.log(run_data);
-                    console.log(sendData);
+                    newScore()
                     socket.emit('submit',JSON.stringify(sendData));
-                    reset();
+                    //reset();
                     button.textContent = "Ready";
+                    document.getElementById("team").value = "";
+                    document.getElementById('approve').getElementsByTagName('input')[0].value = "";
                 } else if (button.textContent == "Ready"){
                     if (findTable()===undefined || document.getElementById("team").value==""){
                         alert("Please input both a team and table");
@@ -302,7 +296,7 @@
         <div class="heading">
             <p><div class="menu-item">Current Score: <span id="score">0</span></div>
             <div class="menu-item"><span>Team: <input type="text" id="team"></span></div>
-            <div class="menu-item"><span>Table: <input type="radio" id="table" value="a" name="table">A<input type="radio" id="table" value="b" name="table">B<input type="radio" id="table" value="c" name="table">C<input type="radio" id="table" value="d" name="table">D</span></div>
+            <div class="menu-item"><span>Table: <input type="radio" id="table" value="a" name="table">A<input type="radio" id="table" value="b" name="table">B<input type="radio" id="table" value="c" name="table">C<input type="radio" id="table" value="d" name="table">D<input type="radio" id="table" value="e" name="table">E<input type="radio" id="table" value="f" name="table">F</span></div>
             <div class="menu-item">Penalties.
                 <span id="mission-touch"><div class="numeric-input"><button type="button" class="subtract">-</button><input type="number" id="penalty" name="0" class="input-number"><button type="button" class="add">+</button></div></span></div>
             <button type="submit" id="button-submit">Ready</button>
@@ -347,12 +341,16 @@
                     switch(event.target.className) {
                         case "button-update":
                             update(event.target);
+                            break;
                         case "button-sup":
                             supUpdate(event.target);
+                            break;
                         case "button-require":
                             requireUpdate(event.target);
+                            break;
                         case "button-engagement":
                             engagementCheck(event.target);
+                            break;
                     }
                 }else{
                     if (event.target.className == "input-number"){
