@@ -75,6 +75,10 @@ app.get('/run/:id', function *() {
     this.body = _.map(res);
 })
 
+app.get('/edit', function *() {
+    yield send(this, __dirname+'/static/edit.html');
+})
+
 app.get('/edit/:id', function *() {
     yield send(this, __dirname+'/static/update.html');
 })

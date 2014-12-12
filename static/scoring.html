@@ -285,8 +285,8 @@
                     reset();
                     socket.emit('score',JSON.stringify(data));
                 } else if (button.textContent == "Finished") {
-                    //document.getElementById('approve').style.display = "block";
-                    button.textContent = "Ready"; //Change back to submit. 
+                    document.getElementById('approve').style.display = "block";
+                    button.textContent = "Submit";
                 }
             }
         </script>
